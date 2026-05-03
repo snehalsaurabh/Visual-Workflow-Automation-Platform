@@ -29,27 +29,90 @@ What is not implemented yet:
 - Real exchange API integration
 - Real backend-driven trigger polling or trade execution
 
-## Prerequisites
+## New backend + workers (implemented)
 
-- Node.js 20 or newer
-- npm
+This repo now includes a TypeScript API + BullMQ-based workers (paper trading v1):
 
-## Run The Frontend
+- `apps/api`: Express + MongoDB + JWT auth + Zod validation
+- `apps/executor`: polls armed workflows and enqueues runs
+- `apps/runner`: consumes runs and simulates actions via a paper broker
 
-1. Open a terminal in `client`
-2. Install packages:
+The existing frontend in `client/` can authenticate against the API and save workflows to it (it still keeps a local draft as a fallback).
+
+## Environment setup (external config)
+
+You need **MongoDB** and **Redis** running locally (or hosted), plus `.env` files for each service.
+
+- API env: copy from `apps/api/.env.example` → `apps/api/.env`
+  - `MONGODB_URI`
+  - `JWT_SECRET` (must be 20+ chars)
+  - `WEB_ORIGIN` should match the frontend origin (default `http://localhost:5173`)
+- Executor env: copy from `apps/executor/.env.example` → `apps/executor/.env`
+  - `MONGODB_URI`, `REDIS_URL`
+- Runner env: copy from `apps/runner/.env.example` → `apps/runner/.env`
+  - `MONGODB_URI`, `REDIS_URL`
+- Web env (when using `apps/web`): copy from `apps/web/.env.example` → `apps/web/.env`
+  - `VITE_API_BASE_URL` (default `http://localhost:5000`)
+
+## Quick start (new services)
+
+From repo root:
 
 ```bash
 npm install
 ```
 
-3. Start the dev server:
+Then in separate terminals:
+
+```bash
+cd apps/api
+npm run dev
+```
+
+```bash
+cd apps/executor
+npm run dev
+```
+
+```bash
+cd apps/runner
+npm run dev
+```
+
+Frontend (current):
+
+```bash
+cd client
+npm run dev
+```
+
+Optional: seed supported node catalog once API is running:
+
+```bash
+curl -X POST http://localhost:5000/api/nodes/seed
+```
+
+## Prerequisites
+
+- Node.js 20 or newer
+- `npm`
+
+## Run The Frontend
+
+1. Open a terminal in `client`
+1. Install packages:
+
+```bash
+npm install
+```
+
+1. Start the dev server:
 
 ```bash
 npm run dev
 ```
 
-4. Open the local URL shown by Vite, usually `http://localhost:5173`
+1. Open the local URL shown by `Vite`, usually `http://localhost:5173`
 
 ## Build Check
 

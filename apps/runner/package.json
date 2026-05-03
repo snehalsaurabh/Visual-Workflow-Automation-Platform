@@ -1,0 +1,27 @@
+{
+  "name": "@tradeflow/runner",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@tradeflow/common": "file:../../packages/common",
+    "bullmq": "^5.58.0",
+    "dotenv": "^17.2.1",
+    "ioredis": "^5.7.0",
+    "mongoose": "^8.17.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.3"
+  }
+}
+
